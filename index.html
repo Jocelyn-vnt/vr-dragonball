@@ -80,17 +80,23 @@
   </a-scene>
   
   <script>
-    AFRAME.registerComponent('nimbus-rotation', {
-      init: function () {
-        this.cameraEl = document.querySelector('#camera');
-        this.nimbusEl = document.querySelector('#nimbus');
-      },
-      tick: function () {
-        // Récupérer la rotation de la caméra
-        const cameraRotation = this.cameraEl.object3D.rotation.y;
-        // Appliquer la rotation de la caméra au Nimbus
-        this.nimbusEl.object3D.rotation.y = cameraRotation;
-      }
-    });
+   AFRAME.registerComponent('nimbus-rotation', {
+  init: function () {
+    this.cameraEl = document.querySelector('#camera');
+    this.nimbusEl = document.querySelector('#nimbus');
+  },
+  tick: function () {
+    // Récupérer la position et la rotation de la caméra
+    const cameraPosition = this.cameraEl.object3D.position;
+    const cameraRotation = this.cameraEl.object3D.rotation;
+
+    // Appliquer la position de la caméra au Nimbus
+    this.nimbusEl.object3D.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
+
+    // Appliquer la rotation de la caméra au Nimbus
+    this.nimbusEl.object3D.rotation.y = cameraRotation.y;
+  }
+});
+
   </script>
   
