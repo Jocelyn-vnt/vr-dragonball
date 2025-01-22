@@ -47,7 +47,7 @@
       </a-entity>
 
       <!-- Nimbus -->
-      <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 0 -.2" rotation="0 0 0"></a-entity>
+      <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 0 -.2" rotation="0 0 180"></a-entity>
     </a-entity>
 
     <!-- Modèles 3D et lumières -->
@@ -56,23 +56,5 @@
       </a-entity>
     </a-entity>
   </a-scene>
-
-  <script>
-    // Synchronisation de la rotation du nimbus avec celle de la caméra
-    AFRAME.registerComponent('sync-nimbus', {
-      init: function () {
-        const camera = document.querySelector('#camera');
-        const nimbus = document.querySelector('#nimbus');
-
-        this.el.sceneEl.addEventListener('camera-move', function () {
-          const rotationY = camera.object3D.rotation.y * (180 / Math.PI); // Conversion en degrés
-          nimbus.object3D.rotation.y = rotationY;
-        });
-      }
-    });
-
-    // Appliquer le composant à la scène
-    document.querySelector('#nimbus').setAttribute('sync-nimbus', '');
-  </script>
 </body>
 </html>
