@@ -32,31 +32,34 @@
     <a-water scale="100 100 1" opacity=".6" position="0 -.5 0" side="double" width="10" length="10" base-color="blue" foam-color="lightblue" repeat="10" voronoi-points="15"></a-water>
   
     <!-- Caméra avec curseur -->
-    <a-entity id="rig" movement-controls="constrainToNavMesh: true;" fly-controls position="1 0 10">
-      <a-entity
-      id="camera"
-      camera
-      position="0 1.6 0"
-      look-controls="pointerLockEnabled: true"
-      cursor="rayOrigin: mouse"
-      wasd-controls="fly: true; acceleration: 100"
-      fly-controls="speed: 5">
-      </a-entity>
-    
-      <a-entity
-        oculus-touch-controls="hand: left"
-        laser-controls="hand: left"
-        raycaster="objects: .clickable; far: 10; showLine: true">
-      </a-entity>
-      <a-entity
-        oculus-touch-controls="hand: right"
-        laser-controls="hand: right"
-        raycaster="objects: .clickable; far: 10; showLine: true">
-      </a-entity>
-  
-      <!-- Nuage -->
-      <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 0 0" rotation="180 0 0"></a-entity>
-    </a-entity>
+    <a-entity
+    id="rig"
+    vr-fly-controls="speed: 0.1"
+    movement-controls="constrainToNavMesh: false"
+    position="1 0 10">
+  <a-entity
+    id="camera"
+    camera
+    position="0 1.6 0"
+    look-controls="pointerLockEnabled: true"
+    cursor="rayOrigin: mouse"
+    wasd-controls="fly: true; acceleration: 100">
+  </a-entity>
+
+  <!-- Contrôleurs VR -->
+  <a-entity
+    oculus-touch-controls="hand: left"
+    laser-controls="hand: left">
+  </a-entity>
+  <a-entity
+    oculus-touch-controls="hand: right"
+    laser-controls="hand: right">
+  </a-entity>
+
+  <!-- Nuage -->
+  <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 0 0" rotation="180 0 0"></a-entity>
+</a-entity>
+
   
     <!-- Nuage controller -->
     <a-entity id="nimbus-controller" nimbus-rotation></a-entity>
