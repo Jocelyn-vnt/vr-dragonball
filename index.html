@@ -14,7 +14,9 @@
       <a-asset-item id="nimbus-glb" src="./assets/nimbus.glb"></a-asset-item>
       <a-asset-item id="ile-glb" src="./assets/Ile V2.glb"></a-asset-item>
 
-      <a-asset-item id="navmesh" src="./assets/Ile-nav-mesh.glb"></a-asset-item>
+      <a-asset-item
+      id="navmesh" src="./assets/Ile-nav-mesh.glb"
+    ></a-asset-item>
   
       <a-asset-item id="Kame-obj" src="./assets/kame edit.obj"></a-asset-item>
       <a-asset-item id="Kame-mtl" src="./assets/kame edit.mtl"></a-asset-item>
@@ -30,19 +32,30 @@
     <a-water scale="100 100 1" opacity=".6" position="0 -.5 0" side="double" width="10" length="10" base-color="blue" foam-color="lightblue" repeat="10" voronoi-points="15"></a-water>
   
     <!-- Caméra avec curseur -->
-    <a-entity id="rig" movement-controls="constrainToNavMesh: true;" fly-controls position="1 0 10">
+    <a-entity id="rig" movement-controls="constrainToNavMesh: true;" fly-controlsposition="1 0 10">
       <a-entity
         id="camera"
         camera
         position="0 1.6 0"
         look-controls="pointerLockEnabled: true"
         cursor="rayOrigin: mouse"
-        wasd-controls="fly: true; acceleration: 100"
-        fly-controls="speed: 5">
+        wasd-controls:="fly: true; acceleration: 100"
+        >
+        
+      </a-entity>
+      <a-entity
+        oculus-touch-controls="hand: left"
+        laser-controls="hand: left"
+        raycaster="objects: .clickable; far: 10; showLine: true">
+      </a-entity>
+      <a-entity
+        oculus-touch-controls="hand: right"
+        laser-controls="hand: right"
+        raycaster="objects: .clickable; far: 10; showLine: true">
       </a-entity>
   
       <!-- Nuage -->
-      <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 0 0"></a-entity>
+      <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 0 0" rotation="180 0 0"></a-entity>
     </a-entity>
   
     <!-- Nuage controller -->
@@ -62,36 +75,22 @@
         position="1.1 -.2 1.1"
         gltf-model="#navmesh"
       ></a-entity>
+
     </a-entity>
   </a-scene>
   
   <script>
-    // Composant pour faire suivre le nuage à la caméra
     AFRAME.registerComponent('nimbus-rotation', {
-      schema: {
-        offset: { type: 'vec3', default: { x: 0, y: 1.5, z: 0 } } // Décalage ajustable
-      },
       init: function () {
-        this.cameraEl = document.querySelector('#camera'); // Référence à la caméra
-        this.nimbusEl = document.querySelector('#nimbus'); // Référence au nuage
-        if (!this.cameraEl || !this.nimbusEl) {
-          console.error('Camera or Nimbus entity not found!');
-        }
+        this.cameraEl = document.querySelector('#camera');
+        this.nimbusEl = document.querySelector('#nimbus');
       },
       tick: function () {
-        if (!this.cameraEl || !this.nimbusEl) return;
-
-        const cameraPosition = new THREE.Vector3();
-        this.cameraEl.object3D.getWorldPosition(cameraPosition);
-
-        // Ajout d'un offset à la position
-        const offset = this.data.offset;
-        cameraPosition.add(new THREE.Vector3(offset.x, offset.y, offset.z));
-
-        // Mise à jour de la position du nuage
-        this.nimbusEl.object3D.position.copy(cameraPosition);
+        // Récupérer la rotation de la caméra
+        const cameraRotation = this.cameraEl.object3D.rotation.y;
+        // Appliquer la rotation de la caméra au Nimbus
+        this.nimbusEl.object3D.rotation.y = cameraRotation;
       }
     });
   </script>
-</body>
-</html>
+  
