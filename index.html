@@ -32,32 +32,31 @@
     <a-water scale="100 100 1" opacity=".6" position="0 -.5 0" side="double" width="10" length="10" base-color="blue" foam-color="lightblue" repeat="10" voronoi-points="15"></a-water>
   
     <!-- Caméra avec curseur -->
-    <a-entity
-    id="rig"
-    vr-fly-controls="speed: 0.1"
-    position="0 1.6 0"
-    movement-controls>
-    <a-entity
+    <a-entity id="rig" movement-controls="constrainToNavMesh: true;" fly-controls position="1 0 10">
+      <a-entity
       id="camera"
       camera
-      position="0 0 0"
-      look-controls="pointerLockEnabled: true">
-    </a-entity>
+      position="0 1.6 0"
+      look-controls="pointerLockEnabled: true"
+      cursor="rayOrigin: mouse"
+      wasd-controls="fly: true; acceleration: 100"
+      fly-controls="speed: 5">
+      </a-entity>
+    
+      <a-entity
+        oculus-touch-controls="hand: left"
+        laser-controls="hand: left"
+        raycaster="objects: .clickable; far: 10; showLine: true">
+      </a-entity>
+      <a-entity
+        oculus-touch-controls="hand: right"
+        laser-controls="hand: right"
+        raycaster="objects: .clickable; far: 10; showLine: true">
+      </a-entity>
   
-    <!-- Contrôleurs VR -->
-    <a-entity
-      oculus-touch-controls="hand: left">
+      <!-- Nuage -->
+      <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 0 0" rotation="180 0 0"></a-entity>
     </a-entity>
-    <a-entity
-      oculus-touch-controls="hand: right">
-    </a-entity>
-  </a-entity>
-  
-
-  <!-- Nuage -->
-  <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 0 0" rotation="180 0 0"></a-entity>
-</a-entity>
-
   
     <!-- Nuage controller -->
     <a-entity id="nimbus-controller" nimbus-rotation></a-entity>
@@ -81,60 +80,17 @@
   </a-scene>
   
   <script>
-   AFRAME.registerComponent('nimbus-rotation', {
-  init: function () {
-    this.cameraEl = document.querySelector('#camera');
-    this.nimbusEl = document.querySelector('#nimbus');
-  },
-  tick: function () {
-    // Récupérer la position et la rotation de la caméra
-    const cameraPosition = this.cameraEl.object3D.position;
-    const cameraRotation = this.cameraEl.object3D.rotation;
-
-    // Appliquer la position de la caméra au Nimbus
-    this.nimbusEl.object3D.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
-
-    // Appliquer la rotation de la caméra au Nimbus
-    this.nimbusEl.object3D.rotation.y = cameraRotation.y;
-  }
-});
-
-  </script>
-
-<script>
-  AFRAME.registerComponent('vr-fly-controls', {
-    schema: {
-      speed: { type: 'number', default: 0.1 } // Vitesse de déplacement
-    },
-    init: function () {
-      this.direction = new THREE.Vector3(); // Pour stocker le vecteur de direction
-    },
-    tick: function () {
-      const rig = this.el; // Le rig de la caméra (entité parent)
-      const controller = this.el.sceneEl.querySelector('[oculus-touch-controls]'); // Contrôleur VR
-      if (!controller) return; // Si aucun contrôleur n'est détecté, sortir
-      
-      // Lire les axes des joysticks (axes 2 et 3 pour Oculus/Quest)
-      const gamepad = controller.components['tracked-controls'].controller;
-      if (gamepad && gamepad.axes.length >= 4) {
-        const xAxis = gamepad.axes[2]; // Axe horizontal
-        const yAxis = gamepad.axes[3]; // Axe vertical
-
-        // Calcul de la direction
-        this.direction.set(xAxis, 0, -yAxis).normalize(); // Déplacement dans le plan XZ
-        this.direction.multiplyScalar(this.data.speed); // Ajuster selon la vitesse
-
-        // Ajuster la position
-        const rotation = rig.object3D.rotation.y; // Utiliser la rotation actuelle du rig
-        const moveX = Math.cos(rotation) * this.direction.z - Math.sin(rotation) * this.direction.x;
-        const moveZ = Math.sin(rotation) * this.direction.z + Math.cos(rotation) * this.direction.x;
-
-        rig.object3D.position.x += moveX;
-        rig.object3D.position.z += moveZ;
-        rig.object3D.position.y += yAxis * this.data.speed; // Monter/descendre avec le joystick vertical
+    AFRAME.registerComponent('nimbus-rotation', {
+      init: function () {
+        this.cameraEl = document.querySelector('#camera');
+        this.nimbusEl = document.querySelector('#nimbus');
+      },
+      tick: function () {
+        // Récupérer la rotation de la caméra
+        const cameraRotation = this.cameraEl.object3D.rotation.y;
+        // Appliquer la rotation de la caméra au Nimbus
+        this.nimbusEl.object3D.rotation.y = cameraRotation;
       }
-    }
-  });
-</script>
-
-</body>
+    });
+  </script>
+  
