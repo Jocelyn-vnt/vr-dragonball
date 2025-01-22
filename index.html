@@ -35,26 +35,24 @@
     <a-entity
     id="rig"
     vr-fly-controls="speed: 0.1"
-    movement-controls="constrainToNavMesh: false"
-    position="1 0 10">
-  <a-entity
-    id="camera"
-    camera
     position="0 1.6 0"
-    look-controls="pointerLockEnabled: true"
-    cursor="rayOrigin: mouse"
-    wasd-controls="fly: true; acceleration: 100">
+    movement-controls>
+    <a-entity
+      id="camera"
+      camera
+      position="0 0 0"
+      look-controls="pointerLockEnabled: true">
+    </a-entity>
+  
+    <!-- Contrôleurs VR -->
+    <a-entity
+      oculus-touch-controls="hand: left">
+    </a-entity>
+    <a-entity
+      oculus-touch-controls="hand: right">
+    </a-entity>
   </a-entity>
-
-  <!-- Contrôleurs VR -->
-  <a-entity
-    oculus-touch-controls="hand: left"
-    laser-controls="hand: left">
-  </a-entity>
-  <a-entity
-    oculus-touch-controls="hand: right"
-    laser-controls="hand: right">
-  </a-entity>
+  
 
   <!-- Nuage -->
   <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 0 0" rotation="180 0 0"></a-entity>
@@ -102,4 +100,41 @@
 });
 
   </script>
-  
+
+<script>
+  AFRAME.registerComponent('vr-fly-controls', {
+    schema: {
+      speed: { type: 'number', default: 0.1 } // Vitesse de déplacement
+    },
+    init: function () {
+      this.direction = new THREE.Vector3(); // Pour stocker le vecteur de direction
+    },
+    tick: function () {
+      const rig = this.el; // Le rig de la caméra (entité parent)
+      const controller = this.el.sceneEl.querySelector('[oculus-touch-controls]'); // Contrôleur VR
+      if (!controller) return; // Si aucun contrôleur n'est détecté, sortir
+      
+      // Lire les axes des joysticks (axes 2 et 3 pour Oculus/Quest)
+      const gamepad = controller.components['tracked-controls'].controller;
+      if (gamepad && gamepad.axes.length >= 4) {
+        const xAxis = gamepad.axes[2]; // Axe horizontal
+        const yAxis = gamepad.axes[3]; // Axe vertical
+
+        // Calcul de la direction
+        this.direction.set(xAxis, 0, -yAxis).normalize(); // Déplacement dans le plan XZ
+        this.direction.multiplyScalar(this.data.speed); // Ajuster selon la vitesse
+
+        // Ajuster la position
+        const rotation = rig.object3D.rotation.y; // Utiliser la rotation actuelle du rig
+        const moveX = Math.cos(rotation) * this.direction.z - Math.sin(rotation) * this.direction.x;
+        const moveZ = Math.sin(rotation) * this.direction.z + Math.cos(rotation) * this.direction.x;
+
+        rig.object3D.position.x += moveX;
+        rig.object3D.position.z += moveZ;
+        rig.object3D.position.y += yAxis * this.data.speed; // Monter/descendre avec le joystick vertical
+      }
+    }
+  });
+</script>
+
+</body>
