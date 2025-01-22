@@ -4,18 +4,16 @@
    <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
    <script src="https://cdn.jsdelivr.net/gh/kylebakerio/ada-water/ada-water.js"></script>
-    <script src="/water.js"></script>
-  </head>
+   <script src="/water.js"></script>
+</head>
 <body>
   <a-scene>
     <!-- Chargement des ressources -->
     <a-assets>
       <a-asset-item id="kamehouse-glb" src="./assets/Kame V8.glb"></a-asset-item>
-      <a-asset-item id="bench-glb" src="./assets/Bench.glb"></a-asset-item>
-      <a-asset-item id="lamp-glb" src="./assets/Lamp post.glb"></a-asset-item>
-      <a-asset-item id="uiia-glb" src="./assets/Dingus the cat.glb"></a-asset-item>
+      <a-asset-item id="nimbus-glb" src="./assets/nimbus.glb"></a-asset-item>
 
-      <a-asset-item id="Kame-obj" src="./assets/kame edit.ob  "></a-asset-item>
+      <a-asset-item id="Kame-obj" src="./assets/kame edit.obj"></a-asset-item>
       <a-asset-item id="Kame-mtl" src="./assets/kame edit.mtl"></a-asset-item>
 
       <img id="sky" src="./assets/sky.png" alt="Texture du ciel">
@@ -26,13 +24,12 @@
     <a-sky src="#sky"></a-sky>
 
     <!-- Eau -->
-
     <a-water scale="100 100 1" opacity=".6" position="0 -.5 0" side="double" width="10" length="10" base-color="blue" foam-color="lightblue" repeat="10" voronoi-points="15"></a-water>
-
 
     <!-- Caméra avec curseur -->
     <a-entity id="rig" movement-controls position="1 0 10">
       <a-entity
+        id="camera"
         camera
         position="0 1.6 0"
         look-controls="pointerLockEnabled: true"
@@ -41,26 +38,41 @@
       <a-entity
         oculus-touch-controls="hand: left"
         laser-controls="hand: left"
-        raycaster="objects: .clickable; far: 10; showLine: true"
-      ></a-entity>
+        raycaster="objects: .clickable; far: 10; showLine: true">
+      </a-entity>
       <a-entity
         oculus-touch-controls="hand: right"
         laser-controls="hand: right"
-        raycaster="objects: .clickable; far: 10; showLine: true"
-      ></a-entity>
+        raycaster="objects: .clickable; far: 10; showLine: true">
+      </a-entity>
+
+      <!-- Nimbus -->
+      <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 0 -.2" rotation="0 0 180"></a-entity>
     </a-entity>
-
-
-    <!-- Sol -->
 
     <!-- Modèles 3D et lumières -->
-    <a-entity> 
-
-      <a-entity gltf-model="#kamehouse-glb" position="1.1 0 1.1" rotation="0 180 0" material="shader: flat" >
+    <a-entity>
+      <a-entity gltf-model="#kamehouse-glb" position="1.1 0 1.1" rotation="0 180 0" material="shader: flat">
       </a-entity>
-      </a-entity>
-
     </a-entity>
   </a-scene>
+
+  <script>
+    // Synchronisation de la rotation du nimbus avec celle de la caméra
+    AFRAME.registerComponent('sync-nimbus', {
+      init: function () {
+        const camera = document.querySelector('#camera');
+        const nimbus = document.querySelector('#nimbus');
+
+        this.el.sceneEl.addEventListener('camera-move', function () {
+          const rotationY = camera.object3D.rotation.y * (180 / Math.PI); // Conversion en degrés
+          nimbus.object3D.rotation.y = rotationY;
+        });
+      }
+    });
+
+    // Appliquer le composant à la scène
+    document.querySelector('#nimbus').setAttribute('sync-nimbus', '');
+  </script>
 </body>
 </html>
