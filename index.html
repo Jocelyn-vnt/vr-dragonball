@@ -12,12 +12,11 @@
     <a-assets>
       <a-asset-item id="kamehouse-glb" src="./assets/Kame V8.glb"></a-asset-item>
       <a-asset-item id="nimbus-glb" src="./assets/nimbus.glb"></a-asset-item>
-      <a-asset-item id="ile-glb" src="./assets/Ile V2.glb"></a-asset-item>
+      <a-asset-item id="ile-glb" src="./assets/IleV7.glb"></a-asset-item>
 
       <a-asset-item id="navmesh" src="./assets/Ile-nav-mesh.glb"></a-asset-item>
   
-      <a-asset-item id="Kame-obj" src="./assets/kame edit.obj"></a-asset-item>
-      <a-asset-item id="Kame-mtl" src="./assets/kame edit.mtl"></a-asset-item>
+      <a-asset-item id="test-obj" src="./assets/test2.obj"></a-asset-item>
   
       <img id="sky" src="./assets/sky.png" alt="Texture du ciel">
       <audio id="cat-sound" src="./assets/OIIAOIIA CAT but in 4K.mp3" preload="auto"></audio>
@@ -30,7 +29,7 @@
     <a-water scale="100 100 1" opacity=".6" position="0 -.5 0" side="double" width="10" length="10" base-color="blue" foam-color="lightblue" repeat="10" voronoi-points="15"></a-water>
   
     <!-- Caméra avec curseur et VR -->
-    <a-entity id="rig" movement-controls="constrainToNavMesh: false; fly: true; acceleration: 100">
+    <a-entity id="rig" movement-controls="constrainToNavMesh: false; fly: true; acceleration: 100 " position="0 0 10">
       <a-entity
         id="camera"
         camera
@@ -39,6 +38,8 @@
         wasd-controls
         >
       </a-entity>
+
+      <a-obj-model src="#test-obj" mtl="#test-mtl"></a-obj-model>
 
       <!-- Contrôleurs VR -->
       <a-entity
@@ -61,9 +62,9 @@
   
     <!-- Modèles 3D et lumières -->
     <a-entity>
-      <a-entity gltf-model="#kamehouse-glb" position="0 1.4 0" rotation="0 180 0" material="shader: flat">       
+      <a-entity gltf-model="#kamehouse-glb" position="0 .6 0" rotation="0 180 0" material="shader: flat">       
       </a-entity>
-      <a-entity gltf-model="#ile-glb" position="1.1 -.2 1.1" rotation="0 0 0" material="shader: flat" >
+      <a-entity gltf-model="#ile-glb" position="1.1 -.7 1.1" rotation="0 0 0" material="shader: flat" >
       </a-entity>
 
       <a-entity
