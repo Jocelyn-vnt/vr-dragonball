@@ -13,6 +13,8 @@
       <a-asset-item id="kamehouse-glb" src="./assets/Kame V8.glb"></a-asset-item>
       <a-asset-item id="nimbus-glb" src="./assets/nimbus.glb"></a-asset-item>
       <a-asset-item id="ile-glb" src="./assets/IleV8.glb"></a-asset-item>
+      <a-asset-item id="palmier-glb" src="./assets/Palmier.glb"></a-asset-item>
+      <a-asset-item id="palmier2-glb" src="./assets/Palmier2.glb"></a-asset-item>
 
       <a-asset-item id="navmesh" src="./assets/Ile-nav-mesh.glb"></a-asset-item>
   
@@ -29,7 +31,7 @@
     <a-water scale="100 100 1" opacity=".6" position="0 -.5 0" side="double" width="10" length="10" base-color="blue" foam-color="lightblue" repeat="10" voronoi-points="15"></a-water>
   
     <!-- Caméra avec curseur et VR -->
-    <a-entity id="rig" movement-controls="constrainToNavMesh: false; fly: true; acceleration: 100 " position="0 0 10">
+    <a-entity id="rig" movement-controls="constrainToNavMesh: true; fly: true; acceleration: 100 " position="0 0 10">
       <a-entity
         id="camera"
         camera
@@ -66,6 +68,12 @@
       </a-entity>
       <a-entity gltf-model="#ile-glb" position="1.1 -.7 1.1" rotation="0 0 0" material="shader: flat" >
       </a-entity>
+      <a-entity gltf-model="#palmier2-glb" position="4.1 0 7.1" rotation="0 45 0" material="shader: flat" scale="2 2 2"></a-entity>
+      <a-entity gltf-model="#palmier2-glb" position="2.1 0 -14.1" rotation="0 120 0" material="shader: flat" scale="2 2 2"></a-entity>
+      <a-entity gltf-model="#palmier-glb" position="-4 0 1" rotation="0 170 0" material="shader: flat" scale="2 2 2"></a-entity>
+      <a-entity gltf-model="#palmier-glb" position="9 0 0" rotation="0 0 0" material="shader: flat" scale="2 2 2"></a-entity>
+      
+
 
       <a-entity
         nav-mesh
