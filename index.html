@@ -1,3 +1,11 @@
+<html>
+<head>
+   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+   <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/kylebakerio/ada-water/ada-water.js"></script>
+   <script src="/water.js"></script>
+</head>
 <body>
   <a-scene vr-mode-ui="enabled: true">
     <!-- Chargement des ressources -->
@@ -7,31 +15,33 @@
       <a-asset-item id="ile-glb" src="./assets/IleV8.glb"></a-asset-item>
       <a-asset-item id="palmier-glb" src="./assets/Palmier.glb"></a-asset-item>
       <a-asset-item id="palmier2-glb" src="./assets/Palmier2.glb"></a-asset-item>
+
       <a-asset-item id="navmesh" src="./assets/Ile-nav-mesh.glb"></a-asset-item>
+  
+      <a-asset-item id="test-obj" src="./assets/test2.obj"></a-asset-item>
   
       <img id="sky" src="./assets/sky.png" alt="Texture du ciel">
       <audio id="kame-house-sound" src="./assets/Ambient.mp3" preload="auto"></audio>
-      <audio id="wave-sound" src="./assets/vagues.mp3" preload="auto"></audio>
+      <audio id="wave-sound" src="./assets/vagues.mp3"></audio>
     </a-assets>
   
     <!-- Ciel -->
     <a-sky src="#sky"></a-sky>
   
     <!-- Eau -->
-    <a-water 
-      scale="100 100 1" 
-      opacity=".6" 
-      position="0 -.5 0" 
-      side="double" 
-      width="10" 
-      length="10" 
-      base-color="blue" 
-      foam-color="lightblue" 
-      repeat="10" 
-      voronoi-points="15"
-      sound="src: #wave-sound; autoplay: true; loop: true; positional: true; distanceModel: linear; maxDistance: 30">
-    </a-water>
-  
+     <a-water 
+       scale="100 100 1" 
+       opacity=".6" 
+       position="0 -.5 0" 
+       side="double" 
+       width="10" 
+       length="10" 
+       base-color="blue" 
+       foam-color="lightblue" 
+       repeat="10" 
+       voronoi-points="15"
+        sound="src: #wave-sound; autoplay: true; loop: true; positional: true; distanceModel: linear; maxDistance: 30">
+      </a-water>  
     <!-- Caméra avec curseur et VR -->
     <a-entity id="rig" movement-controls="constrainToNavMesh: true; fly: true; acceleration: 100 " position="0 0 10">
       <a-entity
@@ -39,7 +49,22 @@
         camera
         position="0 1.6 0"
         look-controls="pointerLockEnabled: true"
-        wasd-controls>
+        wasd-controls
+        >
+      </a-entity>
+
+      <a-obj-model src="#test-obj" mtl="#test-mtl"></a-obj-model>
+
+      <!-- Contrôleurs VR -->
+      <a-entity
+        oculus-touch-controls="hand: left"
+        laser-controls="hand: left"
+        raycaster="objects: .clickable; far: 10; showLine: true">
+      </a-entity>
+      <a-entity
+        oculus-touch-controls="hand: right"
+        laser-controls="hand: right"
+        raycaster="objects: .clickable; far: 10; showLine: true">
       </a-entity>
   
       <!-- Nuage -->
@@ -49,7 +74,7 @@
     <!-- Nuage controller -->
     <a-entity id="nimbus-controller" nimbus-rotation></a-entity>
   
-    <!-- Modèles 3D et sons -->
+    <!-- Modèles 3D et lumières -->
     <a-entity>
       <a-entity 
         gltf-model="#kamehouse-glb" 
@@ -57,51 +82,36 @@
         rotation="0 180 0" 
         material="shader: flat"
         sound="src: #kame-house-sound; autoplay: true; loop: true; positional: true; distanceModel: linear; maxDistance: 25">
+      </a-entity>    
       </a-entity>
-
-      <a-entity 
-        gltf-model="#ile-glb" 
-        position="1.1 -.7 1.1" 
-        rotation="0 0 0" 
-        material="shader: flat">
+      <a-entity gltf-model="#ile-glb" position="1.1 -.7 1.1" rotation="0 0 0" material="shader: flat" >
       </a-entity>
-      
       <a-entity gltf-model="#palmier2-glb" position="4.1 0 7.1" rotation="0 45 0" material="shader: flat" scale="2 2 2"></a-entity>
       <a-entity gltf-model="#palmier2-glb" position="2.1 0 -14.1" rotation="0 120 0" material="shader: flat" scale="2 2 2"></a-entity>
       <a-entity gltf-model="#palmier-glb" position="-4 0 1" rotation="0 170 0" material="shader: flat" scale="2 2 2"></a-entity>
       <a-entity gltf-model="#palmier-glb" position="9 0 0" rotation="0 0 0" material="shader: flat" scale="2 2 2"></a-entity>
-      
-      <a-entity
-        nav-mesh
-        normal-material
-        visible="false"
-        position="1.1 -.2 1.1"
-        gltf-model="#navmesh">
-      </a-entity>
     </a-entity>
   </a-scene>
   
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Déclencher immédiatement les sons après le chargement de la scène
-      const kameHouseSound = document.querySelector('#kame-house-sound');
-      const waveSound = document.querySelector('#wave-sound');
-      
-      kameHouseSound.play();
-      waveSound.play();
-    });
-
     AFRAME.registerComponent('nimbus-rotation', {
       init: function () {
         this.cameraEl = document.querySelector('#camera');
         this.nimbusEl = document.querySelector('#nimbus');
       },
       tick: function () {
+        // Récupérer la position de la caméra
         const cameraPosition = this.cameraEl.object3D.position;
+        // Définir la position du Nimbus pour qu'il suive la caméra
         this.nimbusEl.object3D.position.set(cameraPosition.x, cameraPosition.y - 1.6, cameraPosition.z);
+        
+        // Récupérer la rotation de la caméra
         const cameraRotation = this.cameraEl.object3D.rotation.y;
+        // Appliquer la rotation de la caméra au Nimbus
         this.nimbusEl.object3D.rotation.y = cameraRotation;
       }
+
     });
   </script>
 </body>
+</html>
