@@ -56,12 +56,13 @@
     <a-entity sound="src: #wave-sound; autoplay: true; loop: true; volume: 2"></a-entity>
 
     <!-- Caméra avec curseur et VR -->
-    <a-entity id="rig" movement-controls="fly: true; acceleration: 100; constrainToNavMesh: true" position="0 0 10" toggle-navmesh>
+    <a-entity id="rig" movement-controls="fly: true; acceleration: 100; constrainToNavMesh: true" position="2 .6 4" toggle-navmesh rotation="0 180 0">
       <a-entity
         id="camera"
         camera
         position="0 1.6 0"
         look-controls="pointerLockEnabled: true">
+        <a-cursor></a-cursor>
       </a-entity>
 
       <!-- Contrôleurs VR -->
@@ -102,17 +103,17 @@
 
     <a-entity>
       <a-entity gltf-model="#ile-glb" position="1.1 -.7 1.1" rotation="0 0 0" material="shader: flat"></a-entity>
-      <a-entity gltf-model="#palmier2-glb" position="4.1 0 7.1" rotation="0 45 0" material="shader: flat" scale="2 2 2"></a-entity>
-      <a-entity gltf-model="#palmier2-glb" position="2.1 0 -14.1" rotation="0 120 0" material="shader: flat" scale="2 2 2"></a-entity>
+      <a-entity gltf-model="#palmier2-glb" position="9 0 0" rotation="0 45 0" material="shader: flat" scale="2 2 2"></a-entity>
+      <a-entity gltf-model="#palmier2-glb" position="1.275 -.450 -11.970" rotation="0 120 0" material="shader: flat" scale="2 2 2"></a-entity>
       <a-entity gltf-model="#palmier-glb" position="-4 0 1" rotation="0 170 0" material="shader: flat" scale="2 2 2"></a-entity>
-      <a-entity gltf-model="#db1" position="-14.135 -0.556 -4.218" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1"></a-entity>
-      <a-entity gltf-model="#db2" position="15 -0.352 -6.218" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1"></a-entity>
-      <a-entity gltf-model="#db3" position="-11.6 -0.459 9.939" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1"></a-entity>
-      <a-entity gltf-model="#db4" position="-2.2 0.58 -3" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1"></a-entity>
-      <a-entity gltf-model="#db5" position="-5.768 -0.382 -12.218" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1"></a-entity>
-      <a-entity gltf-model="#db6" position="14.56 -.195 7.596" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1"></a-entity>
-      <a-entity gltf-model="#db7" position="-3.7 3.8 6.279" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1"></a-entity>
-      <a-entity gltf-model="#palmier-glb" position="9 2 0" rotation="0 0 0" material="shader: flat" scale="2 2 2"></a-entity>
+      <a-entity id="db1" gltf-model="#db1" position="-14.135 -0.556 -4.218" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity id="db2" gltf-model="#db2" position="15 -0.352 -6.218" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity id="db3" gltf-model="#db3" position="-11.6 -0.459 9.939" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity id="db4" gltf-model="#db4" position="-2.2 0.58 -3" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity id="db5" gltf-model="#db5" position="-5.768 -0.382 -12.218" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity id="db6" gltf-model="#db6" position="14.56 -.195 7.596" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity id="db7" gltf-model="#db7" position="-3.7 3.8 6.279" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity gltf-model="#palmier-glb" position="9 0 0" rotation="0 0 0" material="shader: flat" scale="2 2 2"></a-entity>
     </a-entity>
 
     <!-- Scripts -->
@@ -161,6 +162,35 @@
       window.removeEventListener('keydown', this.toggleNavMesh); // Nettoyage de l'événement
     }
   });
+  AFRAME.registerComponent('collect-dragon-balls', {
+    init: function () {
+      this.collectedBalls = 0;
+      this.totalBalls = document.querySelectorAll('.collectible').length;
+      this.onCollect = this.onCollect.bind(this);
+
+      document.querySelectorAll('.collectible').forEach(el => {
+        el.addEventListener('click', this.onCollect);
+      });
+    },
+
+    onCollect: function (event) {
+      event.target.setAttribute('visible', 'false');
+      this.collectedBalls += 1;
+
+      if (this.collectedBalls === this.totalBalls) {
+        this.enableFlyMode();
+      }
+    },
+
+    enableFlyMode: function () {
+      const rig = document.querySelector('#rig');
+      rig.setAttribute('movement-controls', 'fly: true; acceleration: 100; constrainToNavMesh: false');
+      console.log('Fly mode enabled');
+    }
+  });
+
+  document.querySelector('a-scene').setAttribute('collect-dragon-balls', '');
+</script>
   </script>
   
 
