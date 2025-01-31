@@ -203,6 +203,7 @@
       this.collectedBalls = 0;
       this.totalBalls = document.querySelectorAll('.collectible').length;
       this.nimbus = document.querySelector('#nimbus'); // Récupération du Nimbus
+      this.rig = document.querySelector('#rig'); // Récupération du joueur
       this.onCollect = this.onCollect.bind(this);
 
       document.querySelectorAll('.collectible').forEach(el => {
@@ -211,6 +212,9 @@
 
       // Assurer que le Nimbus est caché au départ
       this.nimbus.setAttribute('visible', 'false');
+
+      // Désactiver le vol au démarrage (forcer l'usage du navmesh)
+      this.rig.setAttribute('movement-controls', 'fly: false; acceleration: 100; constrainToNavMesh: true');
     },
 
     onCollect: function (event) {
@@ -224,8 +228,8 @@
     },
 
     enableFlyMode: function () {
-      const rig = document.querySelector('#rig');
-      rig.setAttribute('movement-controls', 'fly: true; acceleration: 100; constrainToNavMesh: false');
+      // Activer le mode vol
+      this.rig.setAttribute('movement-controls', 'fly: true; acceleration: 100; constrainToNavMesh: false');
       
       // Rendre le Nimbus visible
       this.nimbus.setAttribute('visible', 'true');
@@ -237,6 +241,8 @@
   // Ajout du composant à la scène
   document.querySelector('a-scene').setAttribute('collect-dragon-balls', '');
 </script>
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
