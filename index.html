@@ -23,7 +23,7 @@
       <a-assets-item id="db6" src="./assets/Dragon ball/dragon ball 6.glb"></a-assets-item>
       <a-assets-item id="db7" src="./assets/Dragon ball/dragon ball 7.glb"></a-assets-item>
 
-      <video id="introdb" autoplay loop="true" src="./assets/Comp 1.mp4"> </video>
+      <video id="introdb" src="./assets/Intro.mp4" autoplay playsinline></video>
 
       <a-asset-item id="kamehouse-glb" src="./assets/Kame V8.glb"></a-asset-item>
       <a-asset-item id="nimbus-glb" src="./assets/nimbus.glb"></a-asset-item>
@@ -54,8 +54,9 @@
       voronoi-points="15">
     </a-water>   
 
-    <!-- Son des vagues omniprésent -->
+    <!-- Son, Musique -->
     <a-entity sound="src: #wave-sound; autoplay: true; loop: true; volume: 2"></a-entity>
+
 
     <!-- Caméra avec curseur et VR -->
     <a-entity id="rig" movement-controls="fly: true; acceleration: 100; constrainToNavMesh: true" position="2 .6 4" toggle-navmesh rotation="0 180 0">
@@ -80,15 +81,40 @@
         raycaster="objects: .clickable; far: 10; showLine: true">
       </a-entity>
 
-      <!-- Nuage -->
+    <!-- Nuage -->
       <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 -2 0" rotation="180 0 0"></a-entity>
     </a-entity>
 
+    <!-- Vidéo -->
+<a-entity position="5 1.6 9" rotation="0 210  0">
+  <a-video 
+    id="video-entity"
+    src="#introdb" 
+    width="4" 
+    height="2.5" 
+    position="0 0 0" 
+    rotation="0 0 0" 
+    loop autoplay
+    material="shader: standard; transparent: true; opacity: 1; alpha-test: 0.1;"
+    rotation="0 180 0">
+  </a-video>
+
+  <a-entity 
+    text="value: PAR ICI;" 
+    position="2.4 1.7 0" 
+    rotation="0 0 0" 
+    scale="6 6 6" 
+    side="double"
+    animation="property: position; from: 2.4 1.7 0; to: 2.4 2 0; dur: 2000; dir: alternate; loop: true"
+    show-video-on-approach="distance: 4">
+</a-entity>
+
+</a-entity>
+
+  
+
     <!-- Nuage controller -->
     <a-entity id="nimbus-controller" nimbus-rotation></a-entity>
-
-    <!-- Vidéo -->
-    <a-video src="#introdb" position="-1  1.6 -1"></a-video>
 
     <!-- Modèles 3D et lumières -->
     <a-entity 
@@ -142,14 +168,7 @@
         }
       });
     </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        const video = document.querySelector("#antarctica");
-        if (video) {
-          video.play().catch(error => console.log("Lecture automatique bloquée :", error));
-        }
-      });
-    </script>
+
 
 <script>
   AFRAME.registerComponent('toggle-navmesh', {
@@ -208,8 +227,79 @@
       });
       document.querySelector('a-scene').setAttribute('collect-dragon-balls', '');
 </script>
-  </script>
-  
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const video = document.querySelector('#introdb');
+    const videoEntity = document.querySelector('#video-entity');
+    video.play().catch(error => {
+      console.log("Autoplay bloqué, ajout d'un événement click.");
+      document.body.addEventListener('click', function () {
+        video.play();
+      }, { once: true });
+    });
+
+    video.addEventListener('play', function () {
+      videoEntity.setAttribute('material', 'src', '#introdb');
+    });
+  });
+</script>
+<script>
+  AFRAME.registerComponent('show-video-on-approach', {
+    schema: { distance: { type: 'number', default: 3 } },
+
+    init: function () {
+      this.cameraEl = document.querySelector('#camera'); // La caméra
+      this.videoEntity = document.querySelector('#video-entity'); // L'entité vidéo
+      this.video = document.querySelector('#introdb'); // L'élément vidéo HTML
+      this.textEl = this.el; // Élément texte auquel ce composant est attaché
+      this.videoVisible = false; // Suivi de l'état de la vidéo
+
+      // On commence en cachant la vidéo
+      this.videoEntity.setAttribute('visible', 'false');
+
+      // Vérifier si la vidéo peut être lue
+      this.video.addEventListener('play', () => {
+        this.videoEntity.setAttribute('material', 'src', '#introdb');
+      });
+
+      // Gestion du blocage de l'autoplay
+      this.video.play().catch(() => {
+        console.log("Autoplay bloqué, ajout d'un événement click.");
+        document.body.addEventListener('click', () => this.video.play(), { once: true });
+      });
+    },
+
+    tick: function () {
+      // Récupère la position de la caméra et du texte
+      const cameraPosition = new THREE.Vector3();
+      this.cameraEl.object3D.getWorldPosition(cameraPosition);
+
+      const textPosition = new THREE.Vector3();
+      this.textEl.object3D.getWorldPosition(textPosition);
+
+      // Calcul de la distance entre la caméra et le texte
+      const distance = cameraPosition.distanceTo(textPosition);
+
+      // Affichage de la vidéo si l'utilisateur est à moins de la distance définie
+      if (distance < this.data.distance && !this.videoVisible) {
+        this.videoEntity.setAttribute('visible', 'true');
+        this.videoEntity.setAttribute('animation', 'property: opacity; from: 0; to: 1; dur: 500; easing: easeInOutQuad');
+        this.video.play();
+        this.videoVisible = true;
+      }
+
+      // Cacher la vidéo si l'utilisateur s'éloigne
+      if (distance >= this.data.distance && this.videoVisible) {
+        this.videoEntity.setAttribute('animation', 'property: opacity; from: 1; to: 0; dur: 500; easing: easeInOutQuad');
+        setTimeout(() => {
+          this.videoEntity.setAttribute('visible', 'false');
+          this.video.pause();
+        }, 500);
+        this.videoVisible = false;
+      }
+    }
+  });
+</script>
 
   </a-scene>
 </body>
