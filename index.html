@@ -195,38 +195,49 @@
       window.removeEventListener('keydown', this.toggleNavMesh); // Nettoyage de l'événement
     }
   });
-  AFRAME.registerComponent('collect-dragon-balls', {
-        init: function () {
-          this.collectedBalls = 0;
-          this.totalBalls = document.querySelectorAll('.collectible').length;
-          this.onCollect = this.onCollect.bind(this);
-
-          document.querySelectorAll('.collectible').forEach(el => {
-            el.addEventListener('click', this.onCollect);
-          });
-        },
-
-        onCollect: function (event) {
-          event.target.setAttribute('visible', 'false');
-          this.collectedBalls += 1;
-          document.querySelector('#collect-text').setAttribute('text', `value: Dragon Balls: ${this.collectedBalls}/7`);
-
-          const sound = document.querySelector('#collect-sound');
-          sound.play();
-
-          if (this.collectedBalls === this.totalBalls) {
-            this.enableFlyMode();
-          }
-        },
-
-        enableFlyMode: function () {
-          const rig = document.querySelector('#rig');
-          rig.setAttribute('movement-controls', 'fly: true; acceleration: 100; constrainToNavMesh: false');
-          console.log('Fly mode enabled');
-        }
-      });
-      document.querySelector('a-scene').setAttribute('collect-dragon-balls', '');
+  
 </script>
+<script>
+  AFRAME.registerComponent('collect-dragon-balls', {
+    init: function () {
+      this.collectedBalls = 0;
+      this.totalBalls = document.querySelectorAll('.collectible').length;
+      this.nimbus = document.querySelector('#nimbus'); // Récupération du Nimbus
+      this.onCollect = this.onCollect.bind(this);
+
+      document.querySelectorAll('.collectible').forEach(el => {
+        el.addEventListener('click', this.onCollect);
+      });
+
+      // Assurer que le Nimbus est caché au départ
+      this.nimbus.setAttribute('visible', 'false');
+    },
+
+    onCollect: function (event) {
+      event.target.setAttribute('visible', 'false');
+      this.collectedBalls += 1;
+      document.querySelector('#collect-text').setAttribute('text', `value: Dragon Balls: ${this.collectedBalls}/7`);
+
+      if (this.collectedBalls === this.totalBalls) {
+        this.enableFlyMode();
+      }
+    },
+
+    enableFlyMode: function () {
+      const rig = document.querySelector('#rig');
+      rig.setAttribute('movement-controls', 'fly: true; acceleration: 100; constrainToNavMesh: false');
+      
+      // Rendre le Nimbus visible
+      this.nimbus.setAttribute('visible', 'true');
+
+      console.log('Fly mode enabled, Nimbus visible');
+    }
+  });
+
+  // Ajout du composant à la scène
+  document.querySelector('a-scene').setAttribute('collect-dragon-balls', '');
+</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     const video = document.querySelector('#introdb');
