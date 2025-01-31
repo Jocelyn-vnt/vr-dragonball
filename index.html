@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Scène A-Frame</title>
-   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-   <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/gh/kylebakerio/ada-water/ada-water.js"></script>
-   <script src="/water.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scène A-Frame</title>
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/kylebakerio/ada-water/ada-water.js"></script>
+  <script src="/water.js"></script>
 </head>
+
 <body>
   <a-scene vr-mode-ui="enabled: true">
     <!-- Chargement des ressources -->
@@ -40,112 +42,93 @@
     <a-sky src="#sky"></a-sky>
 
     <!-- Eau -->
-    <a-water 
-      id="water"
-      scale="100 100 1" 
-      opacity=".6" 
-      position="0 -.5 0" 
-      side="double" 
-      width="10" 
-      length="10" 
-      base-color="blue" 
-      foam-color="lightblue" 
-      repeat="10" 
-      voronoi-points="15">
-    </a-water>   
+    <a-water id="water" scale="100 100 1" opacity=".6" position="0 -.5 0" side="double" width="10" length="10"
+      base-color="blue" foam-color="lightblue" repeat="10" voronoi-points="15">
+    </a-water>
 
     <!-- Son, Musique -->
     <a-entity sound="src: #wave-sound; autoplay: true; loop: true; volume: 2"></a-entity>
 
 
     <!-- Caméra avec curseur et VR -->
-    <a-entity id="rig" movement-controls="fly: true; acceleration: 100; constrainToNavMesh: true" position="2 .6 4" toggle-navmesh rotation="0 180 0">
-      <a-entity
-        id="camera"
-        camera
-        position="0 1.6 0"
-        look-controls="pointerLockEnabled: true">
+    <a-entity id="rig" movement-controls="fly: true; acceleration: 100; constrainToNavMesh: true" position="2 .6 4"
+      toggle-navmesh rotation="0 180 0">
+      <a-entity id="camera" camera position="0 1.6 0" look-controls="pointerLockEnabled: true">
         <a-cursor></a-cursor>
-        <a-entity id="collect-text" position="-1.375 .75 -1" text="value: Dragon Balls: 0/7; color: white; align: center"></a-entity>
+        <a-entity id="collect-text" position="-1.375 .75 -1"
+          text="value: Dragon Balls: 0/7; color: white; align: center"></a-entity>
       </a-entity>
 
       <!-- Contrôleurs VR -->
-      <a-entity
-        oculus-touch-controls="hand: left"
-        laser-controls="hand: left"
+      <a-entity oculus-touch-controls="hand: left" laser-controls="hand: left"
         raycaster="objects: .clickable; far: 10; showLine: true">
       </a-entity>
-      <a-entity
-        oculus-touch-controls="hand: right"
-        laser-controls="hand: right"
+      <a-entity oculus-touch-controls="hand: right" laser-controls="hand: right"
         raycaster="objects: .clickable; far: 10; showLine: true">
       </a-entity>
 
-    <!-- Nuage -->
-      <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 -2 0" rotation="180 0 0" visible="false"></a-entity>
+      <!-- Nuage -->
+      <a-entity id="nimbus" gltf-model="#nimbus-glb" scale="2 2 2" position="0 -2 0" rotation="180 0 0" visible="false">
+      </a-entity>
     </a-entity>
 
     <!-- Vidéo -->
-<a-entity position="5 1.6 9" rotation="0 210   0">
-  <a-video 
-    id="video-entity"
-    src="#introdb" 
-    width="4" 
-    height="2.5" 
-    position="0 0 0" 
-    rotation="0 0 0" 
-    loop autoplay
-    material="shader: standard; transparent: true; opacity: 1; alpha-test: 0.1;"
-    rotation="0 180 0">
-  </a-video>
+    <a-entity position="5 1.6 9" rotation="0 210   0">
+      <a-video id="video-entity" src="#introdb" width="4" height="2.5" position="0 0 0" rotation="0 0 0" loop autoplay
+        material="shader: standard; transparent: true; opacity: 1; alpha-test: 0.1;" rotation="0 180 0">
+      </a-video>
 
-  <a-entity 
-    text="value: PAR ICI;" 
-    position="2.4 1.7 0" 
-    rotation="0 0 0" 
-    scale="6 6 6" 
-    side="double"
-    animation="property: position; from: 2.4 1.7 0; to: 2.4 2 0; dur: 2000; dir: alternate; loop: true"
-    show-video-on-approach="distance: 3">
-</a-entity>
+      <a-entity text="value: PAR ICI;" position="2.4 1.7 0" rotation="0 0 0" scale="6 6 6" side="double"
+        animation="property: position; from: 2.4 1.7 0; to: 2.4 2 0; dur: 2000; dir: alternate; loop: true"
+        show-video-on-approach="distance: 3">
+      </a-entity>
 
-</a-entity>
+    </a-entity>
 
-  
+
 
     <!-- Nuage controller -->
     <a-entity id="nimbus-controller" nimbus-rotation></a-entity>
 
     <!-- Modèles 3D et lumières -->
-    <a-entity 
-      gltf-model="#kamehouse-glb" 
-      position="0 .6 0" 
-      rotation="0 180 0" 
-      material="shader: flat"
-      sound="src: #kame-house-sound; autoplay: true; loop: true; positional: true; distanceModel: linear; maxDistance: 25">
-    </a-entity>    
+    <a-entity>
 
-    <a-entity
-      nav-mesh
-      visible="false"
-      gltf-model="#navmesh" 
-      position="0 -.6 0" 
-      rotation="0 180 0">
+      <a-entity gltf-model="#kamehouse-glb" position="0 .6 0" rotation="0 180 0" material="shader: flat">
+      </a-entity>
+
+      <a-entity position="0 1 0" sound="src: #kame-house-sound; autoplay: true; loop: true; positional: false;">
+      </a-entity>
+
+
+    </a-entity>
+
+    <a-entity nav-mesh visible="false" gltf-model="#navmesh" position="0 -.6 0" rotation="0 180 0">
     </a-entity>
 
     <a-entity>
       <a-entity gltf-model="#ile-glb" position="1.1 -.7 1.1" rotation="0 0 0" material="shader: flat"></a-entity>
-      <a-entity gltf-model="#palmier2-glb" position="9 0 0" rotation="0 45 0" material="shader: flat" scale="2 2 2"></a-entity>
-      <a-entity gltf-model="#palmier2-glb" position="1.275 -.450 -11.970" rotation="0 120 0" material="shader: flat" scale="2 2 2"></a-entity>
-      <a-entity gltf-model="#palmier-glb" position="-4 0 1" rotation="0 170 0" material="shader: flat" scale="2 2 2"></a-entity>
-      <a-entity id="db1" gltf-model="#db1" position="12.054 0.953  -9.404" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
-      <a-entity id="db2" gltf-model="#db2" position="15 -0.352 -6.218" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
-      <a-entity id="db3" gltf-model="#db3" position="8.712 4.112 1.164" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
-      <a-entity id="db4" gltf-model="#db4" position="-2.2 0.58 -3" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
-      <a-entity id="db5" gltf-model="#db5" position=".8 0 -12.218" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
-      <a-entity id="db6" gltf-model="#db6" position="14.56 -.195 7.596" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
-      <a-entity id="db7" gltf-model="#db7" position="-3.7 3.8 6.279" rotation="0 220 0" material="shader: flat" scale=".1 .1 .1" class="collectible clickable"></a-entity>
-      <a-entity gltf-model="#palmier-glb" position="9 0 0" rotation="0 0 0" material="shader: flat" scale="2 2 2"></a-entity>
+      <a-entity gltf-model="#palmier2-glb" position="9 0 0" rotation="0 45 0" material="shader: flat" scale="2 2 2">
+      </a-entity>
+      <a-entity gltf-model="#palmier2-glb" position="1.275 -.450 -11.970" rotation="0 120 0" material="shader: flat"
+        scale="2 2 2"></a-entity>
+      <a-entity gltf-model="#palmier-glb" position="-4 0 1" rotation="0 170 0" material="shader: flat" scale="2 2 2">
+      </a-entity>
+      <a-entity id="db1" gltf-model="#db1" position="12.054 0.953  -9.404" rotation="0 220 0" material="shader: flat"
+        scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity id="db2" gltf-model="#db2" position="15 -0.352 -6.218" rotation="0 220 0" material="shader: flat"
+        scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity id="db3" gltf-model="#db3" position="8.712 4.112 1.164" rotation="0 220 0" material="shader: flat"
+        scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity id="db4" gltf-model="#db4" position="-2.2 0.58 -3" rotation="0 220 0" material="shader: flat"
+        scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity id="db5" gltf-model="#db5" position=".8 0 -12.218" rotation="0 220 0" material="shader: flat"
+        scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity id="db6" gltf-model="#db6" position="14.56 -.195 7.596" rotation="0 220 0" material="shader: flat"
+        scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity id="db7" gltf-model="#db7" position="-3.7 3.8 6.279" rotation="0 220 0" material="shader: flat"
+        scale=".1 .1 .1" class="collectible clickable"></a-entity>
+      <a-entity gltf-model="#palmier-glb" position="9 0 0" rotation="0 0 0" material="shader: flat" scale="2 2 2">
+      </a-entity>
     </a-entity>
 
     <!-- Scripts -->
@@ -160,7 +143,7 @@
           const cameraPosition = this.cameraEl.object3D.position;
           // Définir la position du Nimbus pour qu'il suive la caméra
           this.nimbusEl.object3D.position.set(cameraPosition.x, cameraPosition.y - 1.6, cameraPosition.z);
-          
+
           // Récupérer la rotation de la caméra
           const cameraRotation = this.cameraEl.object3D.rotation.y;
           // Appliquer la rotation de la caméra au Nimbus
@@ -170,144 +153,154 @@
     </script>
 
 
-<script>
-  AFRAME.registerComponent('toggle-navmesh', {
-    init: function () {
-      this.navMeshEnabled = true; // Contrainte activée par défaut
-      this.rig = document.querySelector('#rig');
-      this.collectedBalls = 0;
-      this.totalBalls = document.querySelectorAll('.collectible').length;
-      this.toggleNavMesh = this.toggleNavMesh.bind(this);
+    <script>
+      AFRAME.registerComponent('toggle-navmesh', {
+        init: function () {
+          this.navMeshEnabled = true; // Contrainte activée par défaut
+          this.rig = document.querySelector('#rig');
+          this.collectedBalls = 0;
+          this.totalBalls = document.querySelectorAll('.collectible').length;
+          this.toggleNavMesh = this.toggleNavMesh.bind(this);
 
-      window.addEventListener('keydown', this.toggleNavMesh);
-    },
+          window.addEventListener('keydown', this.toggleNavMesh);
+        },
 
-    toggleNavMesh: function (event) {
-      if (event.code === 'Space') {
-        // Vérifier si toutes les Dragon Balls sont collectées
-        if (this.collectedBalls < this.totalBalls) {
-          console.log("Vol non autorisé, il reste des Dragon Balls à collecter.");
-          return;
+        toggleNavMesh: function (event) {
+          if (event.code === 'Space') {
+            // Vérifier si toutes les Dragon Balls sont collectées
+            if (this.collectedBalls < this.totalBalls) {
+              console.log("Vol non autorisé, il reste des Dragon Balls à collecter.");
+              return;
+            }
+
+            this.navMeshEnabled = !this.navMeshEnabled;
+
+            // Supprimer puis réassigner movement-controls avec la nouvelle contrainte
+            this.rig.removeAttribute('movement-controls');
+            this.rig.setAttribute('movement-controls',
+              `fly: true; acceleration: 100; constrainToNavMesh: ${this.navMeshEnabled}`);
+
+            console.log(`NavMesh Constraint: ${this.navMeshEnabled}`); // Debug dans la console
+          }
+        },
+
+        remove: function () {
+          window.removeEventListener('keydown', this.toggleNavMesh);
         }
+      });
+    </script>
 
-        this.navMeshEnabled = !this.navMeshEnabled;
-        
-        // Supprimer puis réassigner movement-controls avec la nouvelle contrainte
-        this.rig.removeAttribute('movement-controls');
-        this.rig.setAttribute('movement-controls', `fly: true; acceleration: 100; constrainToNavMesh: ${this.navMeshEnabled}`);
+    <script>
+      AFRAME.registerComponent('collect-dragon-balls', {
+        init: function () {
+          this.collectedBalls = 0;
+          this.totalBalls = document.querySelectorAll('.collectible').length;
+          this.nimbus = document.querySelector('#nimbus'); // Récupération du Nimbus
+          this.rig = document.querySelector('#rig'); // Récupération du joueur
+          this.onCollect = this.onCollect.bind(this);
 
-        console.log(`NavMesh Constraint: ${this.navMeshEnabled}`); // Debug dans la console
-      }
-    },
+          document.querySelectorAll('.collectible').forEach(el => {
+            el.addEventListener('click', this.onCollect);
+          });
 
-    remove: function () {
-      window.removeEventListener('keydown', this.toggleNavMesh);
-    }
-  });
-</script>
+          // Assurer que le Nimbus est caché au départ
+          this.nimbus.setAttribute('visible', 'false');
 
-<script>
-  AFRAME.registerComponent('collect-dragon-balls', {
-    init: function () {
-      this.collectedBalls = 0;
-      this.totalBalls = document.querySelectorAll('.collectible').length;
-      this.nimbus = document.querySelector('#nimbus'); // Récupération du Nimbus
-      this.rig = document.querySelector('#rig'); // Récupération du joueur
-      this.onCollect = this.onCollect.bind(this);
+          // Désactiver le vol au démarrage
+          this.rig.setAttribute('movement-controls', 'fly: false; acceleration: 100; constrainToNavMesh: true');
+        },
 
-      document.querySelectorAll('.collectible').forEach(el => {
-        el.addEventListener('click', this.onCollect);
+        onCollect: function (event) {
+          event.target.setAttribute('visible', 'false');
+          this.collectedBalls += 1;
+          document.querySelector('#collect-text').setAttribute('text',
+            `value: Dragon Balls: ${this.collectedBalls}/7`);
+
+          if (this.collectedBalls === this.totalBalls) {
+            this.enableFlyMode();
+          }
+        },
+
+        enableFlyMode: function () {
+          // Activer le mode vol seulement après collecte complète
+          this.rig.setAttribute('movement-controls', 'fly: true; acceleration: 100; constrainToNavMesh: false');
+
+          // Rendre le Nimbus visible
+          this.nimbus.setAttribute('visible', 'true');
+
+          console.log('Fly mode enabled, Nimbus visible');
+        }
       });
 
-      // Assurer que le Nimbus est caché au départ
-      this.nimbus.setAttribute('visible', 'false');
-
-      // Désactiver le vol au démarrage
-      this.rig.setAttribute('movement-controls', 'fly: false; acceleration: 100; constrainToNavMesh: true');
-    },
-
-    onCollect: function (event) {
-      event.target.setAttribute('visible', 'false');
-      this.collectedBalls += 1;
-      document.querySelector('#collect-text').setAttribute('text', `value: Dragon Balls: ${this.collectedBalls}/7`);
-
-      if (this.collectedBalls === this.totalBalls) {
-        this.enableFlyMode();
-      }
-    },
-
-    enableFlyMode: function () {
-      // Activer le mode vol seulement après collecte complète
-      this.rig.setAttribute('movement-controls', 'fly: true; acceleration: 100; constrainToNavMesh: false');
-      
-      // Rendre le Nimbus visible
-      this.nimbus.setAttribute('visible', 'true');
-
-      console.log('Fly mode enabled, Nimbus visible');
-    }
-  });
-
-  // Ajout du composant à la scène
-  document.querySelector('a-scene').setAttribute('collect-dragon-balls', '');
-</script>
+      // Ajout du composant à la scène
+      document.querySelector('a-scene').setAttribute('collect-dragon-balls', '');
+    </script>
 
 
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const video = document.querySelector('#introdb');
-    const videoEntity = document.querySelector('#video-entity');
-    video.play().catch(error => {
-      console.log("Autoplay bloqué, ajout d'un événement click.");
-      document.body.addEventListener('click', function () {
-        video.play();
-      }, { once: true });
-    });
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const video = document.querySelector('#introdb');
+        const videoEntity = document.querySelector('#video-entity');
+        video.play().catch(error => {
+          console.log("Autoplay bloqué, ajout d'un événement click.");
+          document.body.addEventListener('click', function () {
+            video.play();
+          }, {
+            once: true
+          });
+        });
 
-    video.addEventListener('play', function () {
-      videoEntity.setAttribute('material', 'src', '#introdb');
-    });
-  });
-</script>
-<script>
- AFRAME.registerComponent('show-video-on-approach', {
-  schema: { distance: { type: 'number', default: 3 } },
+        video.addEventListener('play', function () {
+          videoEntity.setAttribute('material', 'src', '#introdb');
+        });
+      });
+    </script>
+    <script>
+      AFRAME.registerComponent('show-video-on-approach', {
+        schema: {
+          distance: {
+            type: 'number',
+            default: 3
+          }
+        },
 
-  init: function () {
-    this.cameraEl = document.querySelector('#camera');
-    this.videoEntity = document.querySelector('#video-entity');
-    this.video = document.querySelector('#introdb');
-    this.textEl = this.el;
-    this.videoVisible = false;
-    this.lastCheck = 0;
-  },
+        init: function () {
+          this.cameraEl = document.querySelector('#camera');
+          this.videoEntity = document.querySelector('#video-entity');
+          this.video = document.querySelector('#introdb');
+          this.textEl = this.el;
+          this.videoVisible = false;
+          this.lastCheck = 0;
+        },
 
-  tick: function (time) {
-    if (time - this.lastCheck < 500) return; // Vérifie seulement toutes les 500ms
-    this.lastCheck = time;
+        tick: function (time) {
+          if (time - this.lastCheck < 500) return; // Vérifie seulement toutes les 500ms
+          this.lastCheck = time;
 
-    const cameraPosition = new THREE.Vector3();
-    this.cameraEl.object3D.getWorldPosition(cameraPosition);
+          const cameraPosition = new THREE.Vector3();
+          this.cameraEl.object3D.getWorldPosition(cameraPosition);
 
-    const textPosition = new THREE.Vector3();
-    this.textEl.object3D.getWorldPosition(textPosition);
+          const textPosition = new THREE.Vector3();
+          this.textEl.object3D.getWorldPosition(textPosition);
 
-    const distance = cameraPosition.distanceTo(textPosition);
+          const distance = cameraPosition.distanceTo(textPosition);
 
-    if (distance < this.data.distance && !this.videoVisible) {
-      this.videoEntity.setAttribute('visible', 'true');
-      this.video.play();
-      this.videoVisible = true;
-    } else if (distance >= this.data.distance && this.videoVisible) {
-      this.videoEntity.setAttribute('visible', 'false');
-      this.video.pause();
-      this.videoVisible = false;
-    }
-  }
-});
-</script>
+          if (distance < this.data.distance && !this.videoVisible) {
+            this.videoEntity.setAttribute('visible', 'true');
+            this.video.play();
+            this.videoVisible = true;
+          } else if (distance >= this.data.distance && this.videoVisible) {
+            this.videoEntity.setAttribute('visible', 'false');
+            this.video.pause();
+            this.videoVisible = false;
+          }
+        }
+      });
+    </script>
 
   </a-scene>
 </body>
+
 </html>
