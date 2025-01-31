@@ -174,29 +174,38 @@
   AFRAME.registerComponent('toggle-navmesh', {
     init: function () {
       this.navMeshEnabled = true; // Contrainte activée par défaut
-      this.toggleNavMesh = this.toggleNavMesh.bind(this); // Lier la fonction pour l'événement
-  
+      this.rig = document.querySelector('#rig');
+      this.collectedBalls = 0;
+      this.totalBalls = document.querySelectorAll('.collectible').length;
+      this.toggleNavMesh = this.toggleNavMesh.bind(this);
+
       window.addEventListener('keydown', this.toggleNavMesh);
     },
-  
+
     toggleNavMesh: function (event) {
       if (event.code === 'Space') {
+        // Vérifier si toutes les Dragon Balls sont collectées
+        if (this.collectedBalls < this.totalBalls) {
+          console.log("Vol non autorisé, il reste des Dragon Balls à collecter.");
+          return;
+        }
+
         this.navMeshEnabled = !this.navMeshEnabled;
         
         // Supprimer puis réassigner movement-controls avec la nouvelle contrainte
-        this.el.removeAttribute('movement-controls');
-        this.el.setAttribute('movement-controls', `fly: true; acceleration: 100; constrainToNavMesh: ${this.navMeshEnabled}`);
-  
+        this.rig.removeAttribute('movement-controls');
+        this.rig.setAttribute('movement-controls', `fly: true; acceleration: 100; constrainToNavMesh: ${this.navMeshEnabled}`);
+
         console.log(`NavMesh Constraint: ${this.navMeshEnabled}`); // Debug dans la console
       }
     },
-  
+
     remove: function () {
-      window.removeEventListener('keydown', this.toggleNavMesh); // Nettoyage de l'événement
+      window.removeEventListener('keydown', this.toggleNavMesh);
     }
   });
-  
 </script>
+
 <script>
   AFRAME.registerComponent('collect-dragon-balls', {
     init: function () {
@@ -213,7 +222,7 @@
       // Assurer que le Nimbus est caché au départ
       this.nimbus.setAttribute('visible', 'false');
 
-      // Désactiver le vol au démarrage (forcer l'usage du navmesh)
+      // Désactiver le vol au démarrage
       this.rig.setAttribute('movement-controls', 'fly: false; acceleration: 100; constrainToNavMesh: true');
     },
 
@@ -228,7 +237,7 @@
     },
 
     enableFlyMode: function () {
-      // Activer le mode vol
+      // Activer le mode vol seulement après collecte complète
       this.rig.setAttribute('movement-controls', 'fly: true; acceleration: 100; constrainToNavMesh: false');
       
       // Rendre le Nimbus visible
@@ -241,6 +250,7 @@
   // Ajout du composant à la scène
   document.querySelector('a-scene').setAttribute('collect-dragon-balls', '');
 </script>
+
 
 
 
