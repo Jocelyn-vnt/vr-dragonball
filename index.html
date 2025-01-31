@@ -86,7 +86,32 @@
     </a-entity>
 
     <!-- Vidéo -->
+<a-entity position="5 1.6 9" rotation="0 210   0">
+  <a-video 
+    id="video-entity"
+    src="#introdb" 
+    width="4" 
+    height="2.5" 
+    position="0 0 0" 
+    rotation="0 0 0" 
+    loop autoplay
+    material="shader: standard; transparent: true; opacity: 1; alpha-test: 0.1;"
+    rotation="0 180 0">
+  </a-video>
 
+  <a-entity 
+    text="value: PAR ICI;" 
+    position="2.4 1.7 0" 
+    rotation="0 0 0" 
+    scale="6 6 6" 
+    side="double"
+    animation="property: position; from: 2.4 1.7 0; to: 2.4 2 0; dur: 2000; dir: alternate; loop: true"
+    show-video-on-approach="distance: 3">
+</a-entity>
+
+</a-entity>
+
+  
 
     <!-- Nuage controller -->
     <a-entity id="nimbus-controller" nimbus-rotation></a-entity>
