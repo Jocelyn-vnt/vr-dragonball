@@ -9,7 +9,6 @@
   <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/kylebakerio/ada-water/ada-water.js"></script>
-  <script src="/water.js"></script>
 </head>
 
 <body>
@@ -25,7 +24,7 @@
       <a-assets-item id="db6" src="./assets/Dragon ball/dragon ball 6.glb"></a-assets-item>
       <a-assets-item id="db7" src="./assets/Dragon ball/dragon ball 7.glb"></a-assets-item>
 
-      <video id="introdb" src="./assets/Intro1.mp4" autoplay mutesplaysinline></video>
+
 
       <a-asset-item id="kamehouse-glb" src="./assets/Kame V8.glb"></a-asset-item>
       <a-asset-item id="nimbus-glb" src="./assets/nimbus.glb"></a-asset-item>
@@ -33,13 +32,21 @@
       <a-asset-item id="palmier-glb" src="./assets/Palmier.glb"></a-asset-item>
       <a-asset-item id="palmier2-glb" src="./assets/Palmier2.glb"></a-asset-item>
       <a-asset-item id="navmesh" src="./assets/navmesh.glb"></a-asset-item>
+
+
       <img id="sky" src="./assets/sky.png" alt="Texture du ciel">
+      <img id="reward" src="./assets/cloudgood.png">
+
       <audio id="kame-house-sound" src="./assets/Ambient1.mp3" preload="auto"></audio>
       <audio id="wave-sound" src="./assets/vagues1.mp3" preload="auto"></audio>
+
+      <video id="introdb" src="./assets/Intro1.mp4" autoplay mutesplaysinline></video>
     </a-assets>
 
     <!-- Ciel -->
     <a-sky src="#sky"></a-sky>
+
+
 
     <!-- Eau -->
     <a-water id="water" scale="100 100 1" opacity=".6" position="0 -.5 0" side="double" width="10" length="10"
@@ -48,7 +55,7 @@
 
     <!-- Son, Musique -->
     <a-entity sound="src: #wave-sound; autoplay: true; loop: true; volume: 2"></a-entity>
-    
+
 
 
     <!-- Caméra avec curseur et VR -->
@@ -57,6 +64,15 @@
       <a-entity id="camera" camera position="0 1.6 0" look-controls="pointerLockEnabled: true">
         <a-entity id="collect-text" position="-1.375 .75 -1"
           text="value: Dragon Balls: 0/7; color: white; align: center"></a-entity>
+        <a-plane id="reward-img" scale="1 1 1" width="2" height="1" src="#reward"
+          material="shader: standard; transparent: true;" position=".1 .1 -1.1" visible="true"
+          animation="property: scale; from: 1 1 1; to: 1.2 1.2 1.2; dur: 500; dir: alternate; loop: true">
+          <a-entity id="reward-txt" text="value: Kame vous donne le Nuage Magique ! Vous pouvez voler;"
+            position="0 -.6 0" rotation="0 0 0" scale="2 2 2">
+          </a-entity>
+        </a-plane>
+
+        <a-entity sound="src: #wave-sound; autoplay: true; loop: true; volume: 2"></a-entity>
       </a-entity>
 
       <!-- Contrôleurs VR -->
@@ -190,86 +206,99 @@
       });
     </script>
 
+<script>
+  AFRAME.registerComponent('collect-dragon-balls', {
+    init: function () {
+      this.collectedBalls = 0;
+      this.totalBalls = document.querySelectorAll('.collectible').length;
+      this.nimbus = document.querySelector('#nimbus');
+      this.rig = document.querySelector('#rig');
+      this.rewardImg = document.querySelector('#reward-img');
+      this.rewardTxt = document.querySelector('#reward-txt');
+      this.collectText = document.querySelector('#collect-text');
+      
+      this.onCollect = this.onCollect.bind(this);
+
+      document.querySelectorAll('.collectible').forEach(el => {
+        el.addEventListener('click', this.onCollect);
+      });
+
+      // S'assurer que tout est invisible au départ
+      this.nimbus.setAttribute('visible', 'false');
+      this.rewardImg.setAttribute('visible', 'false');
+      this.rewardTxt.setAttribute('visible', 'false');
+
+      // Désactiver le vol au départ
+      this.rig.setAttribute('movement-controls', 'fly: false; acceleration: 100; constrainToNavMesh: true');
+    },
+
+    onCollect: function (event) {
+      event.target.setAttribute('visible', 'false');
+      this.collectedBalls += 1;
+
+      this.collectText.setAttribute('text', `value: Dragon Balls: ${this.collectedBalls}/7`);
+
+      if (this.collectedBalls === this.totalBalls) {
+        this.enableFlyMode();
+      }
+    },
+
+    enableFlyMode: function () {
+      // Activer le mode vol et afficher les récompenses
+      this.rig.setAttribute('movement-controls', 'fly: true; acceleration: 100; constrainToNavMesh: false');
+      this.nimbus.setAttribute('visible', 'true');
+      this.rewardImg.setAttribute('visible', 'true');
+      this.rewardTxt.setAttribute('visible', 'true');
+
+      console.log('Fly mode enabled, Nimbus and reward displayed');
+
+      // Masquer après 5 secondes
+      setTimeout(() => {
+        this.rewardImg.setAttribute('visible', 'false');
+        this.rewardTxt.setAttribute('visible', 'false');
+      }, 5000);
+    }
+  });
+
+  document.querySelector('a-scene').setAttribute('collect-dragon-balls', '');
+</script>
     <script>
-      AFRAME.registerComponent('collect-dragon-balls', {
-        init: function () {
-          this.collectedBalls = 0;
-          this.totalBalls = document.querySelectorAll('.collectible').length;
-          this.nimbus = document.querySelector('#nimbus'); // Récupération du Nimbus
-          this.rig = document.querySelector('#rig'); // Récupération du joueur
-          this.onCollect = this.onCollect.bind(this);
-
-          document.querySelectorAll('.collectible').forEach(el => {
-            el.addEventListener('click', this.onCollect);
-          });
-
-          // Assurer que le Nimbus est caché au départ
-          this.nimbus.setAttribute('visible', 'false');
-
-          // Désactiver le vol au démarrage
-          this.rig.setAttribute('movement-controls', 'fly: false; acceleration: 100; constrainToNavMesh: true');
-        },
-
-        onCollect: function (event) {
-          event.target.setAttribute('visible', 'false');
-          this.collectedBalls += 1;
-          document.querySelector('#collect-text').setAttribute('text',
-            `value: Dragon Balls: ${this.collectedBalls}/7`);
-
-          if (this.collectedBalls === this.totalBalls) {
-            this.enableFlyMode();
+      AFRAME.registerComponent('show-video-on-approach', {
+        schema: {
+          distance: {
+            type: 'number',
+            default: 3
           }
         },
 
-        enableFlyMode: function () {
-          // Activer le mode vol seulement après collecte complète
-          this.rig.setAttribute('movement-controls', 'fly: true; acceleration: 100; constrainToNavMesh: false');
+        init: function () {
+          this.cameraEl = document.querySelector('#camera');
+          this.videoEntity = document.querySelector('#video-entity');
+          this.video = document.querySelector('#introdb');
+          this.videoVisible = false;
+        },
 
-          // Rendre le Nimbus visible
-          this.nimbus.setAttribute('visible', 'true');
+        tick: function () {
+          const cameraPosition = new THREE.Vector3();
+          this.cameraEl.object3D.getWorldPosition(cameraPosition);
 
-          console.log('Fly mode enabled, Nimbus visible');
+          const videoPosition = new THREE.Vector3();
+          this.videoEntity.object3D.getWorldPosition(videoPosition);
+
+          const distance = cameraPosition.distanceTo(videoPosition);
+
+          if (distance < this.data.distance && !this.videoVisible) {
+            this.videoEntity.setAttribute('visible', 'true'); // Afficher la vidéo
+            this.video.play(); // Lancer la vidéo
+            this.videoVisible = true;
+          } else if (distance >= this.data.distance && this.videoVisible) {
+            this.videoEntity.setAttribute('visible', 'false'); // Cacher la vidéo
+            this.video.pause(); // Arrêter la vidéo
+            this.videoVisible = false;
+          }
         }
       });
-
-      // Ajout du composant à la scène
-      document.querySelector('a-scene').setAttribute('collect-dragon-balls', '');
     </script>
-
-<script>
-  AFRAME.registerComponent('show-video-on-approach', {
-    schema: {
-      distance: { type: 'number', default: 3 }
-    },
-
-    init: function () {
-      this.cameraEl = document.querySelector('#camera');
-      this.videoEntity = document.querySelector('#video-entity');
-      this.video = document.querySelector('#introdb');
-      this.videoVisible = false;
-    },
-
-    tick: function () {
-      const cameraPosition = new THREE.Vector3();
-      this.cameraEl.object3D.getWorldPosition(cameraPosition);
-
-      const videoPosition = new THREE.Vector3();
-      this.videoEntity.object3D.getWorldPosition(videoPosition);
-
-      const distance = cameraPosition.distanceTo(videoPosition);
-
-      if (distance < this.data.distance && !this.videoVisible) {
-        this.videoEntity.setAttribute('visible', 'true'); // Afficher la vidéo
-        this.video.play(); // Lancer la vidéo
-        this.videoVisible = true;
-      } else if (distance >= this.data.distance && this.videoVisible) {
-        this.videoEntity.setAttribute('visible', 'false'); // Cacher la vidéo
-        this.video.pause(); // Arrêter la vidéo
-        this.videoVisible = false;
-      }
-    }
-  });
-</script>
 
   </a-scene>
 </body>
