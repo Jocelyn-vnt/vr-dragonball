@@ -24,6 +24,13 @@
       <a-assets-item id="db6" src="./assets/Dragon ball/dragon ball 6.glb"></a-assets-item>
       <a-assets-item id="db7" src="./assets/Dragon ball/dragon ball 7.glb"></a-assets-item>
 
+      <img id="db1-hud" src="./assets/Dragon ball/1x/db1-HUD.png" alt="">
+      <img id="db2-hud" src="./assets/Dragon ball/1x/db2-HUD.png" alt="">
+      <img id="db3-hud" src="./assets/Dragon ball/1x/db3-HUD.png" alt="">
+      <img id="db4-hud" src="./assets/Dragon ball/1x/db4-HUD.png" alt="">
+      <img id="db5-hud" src="./assets/Dragon ball/1x/db5-HUD.png" alt="">
+      <img id="db6-hud" src="./assets/Dragon ball/1x/db6-HUD.png" alt="">
+      <img id="db7-hud" src="./assets/Dragon ball/1x/db7-HUD.png" alt="">
 
 
       <a-asset-item id="kamehouse-glb" src="./assets/House/Kame V8.glb"></a-asset-item>
@@ -62,6 +69,7 @@
     <a-entity id="rig" movement-controls="fly: true; acceleration: 100; constrainToNavMesh: true" position="2 .6 4"
       toggle-navmesh rotation="0 180 0">
       <a-entity id="camera" camera position="0 1.6 0" look-controls="pointerLockEnabled: true">
+        <a-cursor></a-cursor>
         <a-entity id="collect-text" position="-1.375 .75 -1"
           text="value: Dragon Balls: 0/7; color: white; align: center"></a-entity>
         <a-plane id="reward-img" scale=".5 .5 .5" width="2" height="1" src="#reward"
@@ -70,6 +78,7 @@
           <a-entity id="reward-txt" text="value: Kame vous donne le Nuage Magique ! Vous pouvez voler;"
             position="0 -.6 0" rotation="0 0 0" scale="1 1 1">
           </a-entity>
+          
         </a-plane>
 
         <a-entity sound="src: #wave-sound; autoplay: true; loop: true; volume: 2"></a-entity>
